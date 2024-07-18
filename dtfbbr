@@ -1,0 +1,63 @@
+local Rayfield = loadstring(game:HttpGet('https://raw.githubusercontent.com/shlexware/Rayfield/main/source'))()
+
+local Window = Rayfield:CreateWindow({
+   Name = "Destroy Fruit Laggy",
+   LoadingTitle = "Yes",
+   LoadingSubtitle = "by YesHub#6761",
+   ConfigurationSaving = {
+      Enabled = true,
+      FolderName = nil, -- Create a custom folder for your hub/game
+      FileName = "Big Hub"
+   },
+   Discord = {
+      Enabled = true,
+      Invite = "V8xtqQzhdk", -- The Discord invite code, do not include discord.gg/
+      RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+   },
+   KeySystem = false, -- Set this to true to use our key system
+   KeySettings = {
+      Title = "Sirius Hub",
+      Subtitle = "Key System",
+      Note = "Join the discord (discord.gg/sirius)",
+      FileName = "SiriusKey",
+      SaveKey = true,
+      GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+      Key = "Hello"
+   }
+})
+
+local lag = Window:CreateTab("Anti-Lag", 4483362458) -- Title, Image
+
+local Toggle = lag:CreateToggle({
+    Name = "Destroy All Bow Dropped",
+    CurrentValue = false,
+    Flag = "Toggle1",
+    Callback = function(t)
+getgenv().destroybows = t
+
+while getgenv().destroybows == true and wait(0.2) do
+    for i, v in pairs(game:GetService("Workspace").Items:GetChildren()) do
+        if v.Name == "Bow" or v.Name == "Iron Bow" or v.Name == "Crossbow" or v.Name == "Magnetite Crossbow" or v.Name == "Leaves" or v.Name == "Wood" or v.Name == "Log" or v.Name == "Stone" or v.Name == "Crystal Chunk" or v.Name == "Gold" or v.Name == "Raw Meat" or v.Name == "Iron" then
+        v:Destroy()
+        end
+        end
+end
+    end,
+ })
+
+ local Toggle = lag:CreateToggle({
+    Name = "Destroy All Fruits Dropped",
+    CurrentValue = false,
+    Flag = "Toggle1",
+    Callback = function(t)
+getgenv().destroyfruits = t
+
+while getgenv().destroyfruits == true and wait(0.2) do
+    for i, v in pairs(game:GetService("Workspace").Items:GetChildren()) do
+        if v.Name == "Berry" or v.Name == "Bloodfruit" or v.Name == "Lemon" or v.Name == "Strawberry" or v.Name == "Jelly" or v.Name == "Strangefruit" or v.Name == "Bluefruit" or v.Name == "Oddberry" or v.Name == "Sunfruit" then
+        v:Destroy()
+        end
+        end
+end
+    end,
+ })
