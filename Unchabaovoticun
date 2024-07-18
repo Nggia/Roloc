@@ -1,0 +1,77 @@
+local User = game.Players.LocalPlayer
+local Mouse = User:GetMouse()
+local Closest
+if not getgenv().Once then
+	getgenv().Once = true
+	local OldNamecall
+	OldNamecall = hookmetamethod(game, "__namecall", function(...)
+		local method, Self = getnamecallmethod(), ...
+		if method == "FireServer" and Self.Name == "RemoteEvent" and getgenv().Enabled then
+			local Args = { ... }
+			local value = Closest
+			if value and (typeof(Args[2]) == "Vector3" or typeof(Args[2]) == "CFrame") then
+				if typeof(Args[2]) == "CFrame" then value = CFrame.new(value) end
+				Args[2] = value
+			end
+			return OldNamecall(unpack(Args))
+		end
+		return OldNamecall(...)
+	end)
+	local OldIndex
+	OldIndex = hookmetamethod(game, "__index", function(Self, Index)
+		if Index == "Hit" and Self == Mouse and getgenv().Enabled and Closest then return CFrame.new(Closest) end
+		return OldIndex(Self, Index)
+	end)
+	spawn(function()
+		while wait() do
+			if getgenv().Enabled then
+				local MaxDis = math.huge
+				local Closest2
+				pcall(function()
+					for i, v in next, game.Players:GetChildren() do
+						local Char = v.Character
+						if v ~= User and User.Character and Char and Char.PrimaryPart and Char:FindFirstChild"Humanoid" and not Char:FindFirstChild"ForceField" and Char.Humanoid.Health > 0 then
+							local Dis = (Char.PrimaryPart.Position - User.Character.PrimaryPart.Position).magnitude
+							if Dis < MaxDis then
+								Closest2 = Char.PrimaryPart.Position
+								MaxDis = Dis
+							end
+						end
+					end
+				end)
+				Closest = Closest2
+			end
+		end
+	end)
+	spawn(function()
+		while wait() do
+			if getgenv().Enabled then
+				pcall(function()
+					for _, Tycoon in next, workspace.Tycoons:GetChildren() do
+						for _, Model in next, Tycoon:GetChildren() do
+							if Model.Name:sub(1, 9) == "GearGiver" and Model:FindFirstChild("TouchInterest", true) then
+								firetouchinterest(User.Character.PrimaryPart, Model:FindFirstChild("TouchInterest", true).Parent, 0)
+								firetouchinterest(User.Character.PrimaryPart, Model:FindFirstChild("TouchInterest", true).Parent, 1)
+							end
+						end
+					end
+				end)
+			end
+		end
+	end)
+	while wait() do
+		if getgenv().Enabled then
+			pcall(function()
+				for i, v in next, User.Backpack:GetChildren() do
+					local Remote = v:FindFirstChild"RemoteEvent"
+					if getgenv().Enabled and v.Name ~= "Eye Teleport" and Remote and User.Character and not tonumber(v) then
+						User.Character.Humanoid:EquipTool(v)
+						v:Activate()
+						wait(0.3)
+						User.Character.Humanoid:UnequipTools()
+					end
+				end
+			end)
+		end
+	end
+end
